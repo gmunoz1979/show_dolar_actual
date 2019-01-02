@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ejemplo Dolar Actual</title>
+    </head>
+    <body>
+        <div class="show_dolar">
+            <span>Dolar:</span>
+            <span id="show_dolar">--</span>
+            <span>Fecha:</span>
+            <span id="show_fecha">--</span>
+        </div>
+        <script>
+            /*
+             * Funcion autoejecutada
+             */
+            +function() {
+                const API_VERSION = 'api-sbifv3';
+                const API_KEY     = '77db4d92e783aebf1ec3770109b9d5d605ad4fe5';
+                const FORMATO     = 'json';
+
+                fetch(`https://api.sbif.cl/${API_VERSION}/recursos_api/dolar?apikey=${API_KEY}&formato=${FORMATO}`)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                    })
+                    .then(json => {
+
+                        const show_dolar = document.getElementById('show_dolar');
+                        show_dolar.innerHTML = '';
+                        const show_fecha = document.getElementById('show_fecha');
+                        show_fecha.innerHTML = '';
+
+                        const dolar_actual = json.Dolares[0];
+
+                        if (!dolar_actual) {
+                            show_dolar.appendChild(document.createTextNode('--'));
+                            show_fecha.appendChild(document.createTextNode('--'));
+                            return;
+                        }
+                        
+                        show_dolar.appendChild(document.createTextNode(dolar_actual.Valor));
+                        show_fecha.appendChild(document.createTextNode(dolar_actual.Fecha));
+                    });
+            }();
+        </script>
+    </body>
+</html>
